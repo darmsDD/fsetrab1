@@ -13,13 +13,13 @@ void lcd_main(float TI,float TR, float TE)   {
   lcd_init(); // setup LCD
   ClrLcd(); // defaults LINE1
   lcdLoc(LINE1);
-  typeln("TI:");
+  typeln("TI");
   typeFloat(TI);
-  typeln(" TR:");
+  typeln(" TR");
   typeFloat(TR);
 
   lcdLoc(LINE2);
-  typeln("TE:");
+  typeln("TE");
   typeFloat(TE);
 
 }
@@ -28,7 +28,7 @@ void lcd_main(float TI,float TR, float TE)   {
 // float to string
 void typeFloat(float myFloat)   {
   char buffer[20];
-  sprintf(buffer, "%4.1f",  myFloat);
+  sprintf(buffer, "%4.2f",  myFloat);
   typeln(buffer);
 }
 

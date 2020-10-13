@@ -38,5 +38,5 @@ void desliga_resistor_ventoinha(int hot){
     else{
         bcm2835_gpio_write(RESISTOR,1);
     }
-    bcm2835_close();
+    //bcm2835_close();
 }

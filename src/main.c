@@ -2,7 +2,7 @@
 
 
 float tempR=28,tempI=30.12,tempE=-10.0;
-int contador = 0,escreve=1 , contador2=0;
+int  escreve=1;
 volatile int esperaEsc = 0;
 int hot=-2;
 FILE *fp2;
@@ -18,10 +18,10 @@ int main(){
 
     signal(SIGALRM,int_trata_alarme);
     signal(SIGINT, trata_interrupcao);
-    //signal(SIGTERM, trata_interrupcao);
-    //signal(SIGQUIT, trata_interrupcao);
-    //signal(SIGHUP, trata_interrupcao);
-    //signal(SIGTSTP, trata_interrupcao);
+    signal(SIGTERM, trata_interrupcao);
+    signal(SIGQUIT, trata_interrupcao);
+    signal(SIGHUP, trata_interrupcao);
+    signal(SIGTSTP, trata_interrupcao);
     
 
     ualarm(500,500);
@@ -46,7 +46,8 @@ void* uart () {
 
 void * i2c_TE(){
     //get external temperature
-    tempE = TE();
+    int a = TE();
+    if(a>0){tempE = a;}
     return NULL;
 }
 void * lcd(void * parameters){
@@ -71,8 +72,8 @@ void * arquivo(){
     escreve=0;
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
-    fprintf(fp2,"%0.2lf deg C, %0.2lf hPa, %0.2lf%%, %s", tempI, tempR, tempE, asctime(tm));
-    printf("%0.2lf deg C,  %0.2lf C,  %0.2lf C , %s", tempI, tempR, tempE, asctime(tm));
+    fprintf(fp2,"%4.2f deg C, %4.2f deg C, %4.2f degC, %s", tempI, tempR, tempE, asctime(tm));
+    //printf("%0.2lf deg C,  %0.2lf C,  %0.2lf C , %s", tempI, tempR, tempE, asctime(tm));
     fclose(fp2);
     sleep(2);
     esperaEsc = 0;
@@ -86,7 +87,7 @@ void int_trata_alarme(int sig){
     pthread_create (&thread2_id, NULL, &i2c_TE, NULL);
     pthread_join (thread1_id, NULL);
     pthread_join (thread2_id, NULL);
-    //printf("tempI = %f tempR = %f tempE = %f\n",tempI,tempR,tempE);
+    printf("tempI = %f tempR = %f tempE = %f\n",tempI,tempR,tempE);
     pthread_t thread3_id;
     struct temperature temp;
     temp.tempI2 = tempI;
@@ -109,12 +110,11 @@ void int_trata_alarme(int sig){
         hot=1;
         gpio(hot);
     }
-    if(fabs(tempI-tempR)<2 || contador2>=10){
+    if(fabs(tempI-tempR)<2){
+        printf("vou desligar a ventoinha/resistor\n");
         desliga_resistor_ventoinha(hot);
         hot=-2;
-        contador2=0;
     }
-    contador2++;
     
     pthread_join (thread3_id, NULL);
     
