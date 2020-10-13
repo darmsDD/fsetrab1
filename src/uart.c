@@ -1,6 +1,6 @@
 #include "uart.h"
 int uart0_filestream = -1;
-int initUart(int option){
+float initUart(int option){
 
     uart0_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);    //Open in non blocking read/write mode
     if (uart0_filestream == -1)
@@ -50,7 +50,7 @@ int initUart(int option){
             close(uart0_filestream);
             return -1;
         }
-        sleep(1);
+        usleep(300000);
         rx_length = read(uart0_filestream, &vari, 4);
         if(valLeitura(rx_length)){
             char s;

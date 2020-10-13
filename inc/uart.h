@@ -10,6 +10,6 @@
 
 int valLeitura(int rx_length);
 int valEscrita(int count);
-int initUart(int option);
+float initUart(int option);
 void trata_interrupcao_uart(void);
 #endif

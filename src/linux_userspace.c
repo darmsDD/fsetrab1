@@ -37,7 +37,7 @@ int8_t user_i2c_read(uint8_t reg_addr, uint8_t *data, uint32_t len, void *intf_p
 
 int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *data, uint32_t len, void *intf_ptr);
 
-int8_t stream_sensor_data_forced_mode(struct bme280_dev *dev);
+float stream_sensor_data_forced_mode(struct bme280_dev *dev);
 
 void saveDataCsv(struct bme280_data *comp_data);
 
@@ -168,7 +168,7 @@ void print_sensor_data(struct bme280_data *comp_data)
 /*!
  * @brief This API reads the sensor temperature, pressure and humidity data in forced mode.
  */
-int8_t stream_sensor_data_forced_mode(struct bme280_dev *dev)
+float stream_sensor_data_forced_mode(struct bme280_dev *dev)
 {
     /* Variable to define the result */
     int8_t rslt = BME280_OK;
@@ -214,7 +214,7 @@ int8_t stream_sensor_data_forced_mode(struct bme280_dev *dev)
     }
 
     /* Wait for the measurement to complete and print data */
-    sleep(1);
+    usleep(300000);
     rslt = bme280_get_sensor_data(BME280_ALL, &save_Data, dev);
     if (rslt != BME280_OK)
     {
@@ -222,9 +222,6 @@ int8_t stream_sensor_data_forced_mode(struct bme280_dev *dev)
         return -1;
     }
     
-    //printf("%0.2lf deg C",save_Data.temperature);
-    
-    //printf("%lf\n",save_Data[i].temperature);
 
     return save_Data.temperature;
 }

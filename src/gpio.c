@@ -1,12 +1,8 @@
 #include "gpio.h"
 #include <bcm2835.h>
-
+int aberto;
 int gpio(int hot)
 {
-
-    if (!bcm2835_init())
-      return -1;
-      
     configura_pinos();
     if(hot==0){
         bcm2835_gpio_write(RESISTOR,0);
@@ -38,5 +34,4 @@ void desliga_resistor_ventoinha(int hot){
     else{
         bcm2835_gpio_write(RESISTOR,1);
     }
-    //bcm2835_close();
 }
