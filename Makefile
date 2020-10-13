@@ -7,7 +7,7 @@ OBJDIR = $(BLDDIR)/obj
 CFLAGS = -c -Wall -I$(INCDIR)  
 SRC = $(wildcard $(SRCDIR)/*.c)
 OBJ = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
-EXE = bin/bin
+EXE = ./prog
 
 all: clean $(EXE) 
     
