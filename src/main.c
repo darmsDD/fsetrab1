@@ -3,7 +3,9 @@
 
 float tempR=-10.0,tempI=-10.0,tempE=-10.0;
 int contador = 0,escreve=1 , contador2=0;
+volatile int esperaEsc = 0;
 int hot=-2;
+FILE *fp2;
 
 struct temperature {
     float tempI2;
@@ -64,6 +66,25 @@ void * lcd(void * parameters){
     return NULL;
 }
 
+void * arquivo(){
+    esperaEsc = 1;
+    if(escreve==1){
+        fp2=fopen("trab1.csv","w");
+        fprintf(fp2,"TemperatureI, TemperatureR, TemperatureE, Date and Time\n");
+        fclose(fp2);
+    }
+    fp2=fopen("trab1.csv","a");
+    escreve=0;
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    fprintf(fp2,"%0.2lf deg C, %0.2lf hPa, %0.2lf%%, %s", tempI, tempR, tempE, asctime(tm));
+    printf("%0.2lf deg C,  %0.2lf C,  %0.2lf C , %s", tempI, tempR, tempE, asctime(tm));
+    fclose(fp2);
+    sleep(2);
+    esperaEsc = 0;
+    return NULL;
+}
+
 void int_trata_alarme(int sig){
     pthread_t thread1_id;
     pthread_t thread2_id;
@@ -71,20 +92,23 @@ void int_trata_alarme(int sig){
     pthread_create (&thread2_id, NULL, &i2c, NULL);
     pthread_join (thread1_id, NULL);
     pthread_join (thread2_id, NULL);
-    printf("tempI = %f tempR = %f tempE = %f\n",tempI,tempR,tempE);
+    //printf("tempI = %f tempR = %f tempE = %f\n",tempI,tempR,tempE);
     pthread_t thread3_id;
     struct temperature temp;
     temp.tempI2 = tempI;
     temp.tempR2 = tempR;
     temp.tempE2 = tempE;
     pthread_create (&thread3_id, NULL, &lcd,&temp);
-    pthread_join (thread2_id, NULL);
+    if(!esperaEsc){
+        pthread_t thread4_id;
+        pthread_create(&thread4_id,NULL,&arquivo,NULL);
+    }
     
-    if(tempI>tempR){
+    if(tempI<tempR){
         hot=0;
         gpio(hot);
     }
-    else if(tempI<tempR){
+    else if(tempI>tempR){
         hot=1;
         gpio(hot);
     }
@@ -94,26 +118,8 @@ void int_trata_alarme(int sig){
         contador2=0;
     }
     contador2++;
-    contador++;
-    if(contador==4){
-        contador =0;
-        FILE *fp2;
-        if(escreve==1){
-            fp2=fopen("trab1.csv","w");
-            fprintf(fp2,"TemperatureI, TemperatureR, TemperatureE, Date and Time\n");
-            fclose(fp2);
-        }else{
-            fp2=fopen("trab1.csv","a");
-        }
-        escreve=0;
-        time_t t = time(NULL);
-        struct tm *tm = localtime(&t);
-        fprintf(fp2,"%0.2lf deg C, %0.2lf hPa, %0.2lf%%, %s", tempI, tempR, tempE, asctime(tm));
-        printf("%0.2lf deg C,  %0.2lf C,  %0.2lf C , %s", tempI, tempR, tempE, asctime(tm));
-        fclose(fp2);
-    }
     
-    
+    pthread_join (thread3_id, NULL);
     
 }
     
@@ -123,5 +129,8 @@ void trata_interrupcao(int sinal){
     trata_interrupcao_gpio();
     trata_interrupcao_lcd();
     trata_interrupcao_uart();
+    if(fp2!=NULL){
+        fclose(fp2);
+    }
     exit(0);
 }
