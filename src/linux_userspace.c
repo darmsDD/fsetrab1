@@ -214,7 +214,7 @@ float stream_sensor_data_forced_mode(struct bme280_dev *dev)
     }
 
     /* Wait for the measurement to complete and print data */
-    usleep(300000);
+    usleep(50000);
     rslt = bme280_get_sensor_data(BME280_ALL, &save_Data, dev);
     if (rslt != BME280_OK)
     {

@@ -9,7 +9,7 @@ float initUart(int option){
     }
     else
     {
-        printf("UART inicializada!\n");
+        //printf("UART inicializada!\n");
     }    
     struct termios options;
     tcgetattr(uart0_filestream, &options);
@@ -50,11 +50,11 @@ float initUart(int option){
             close(uart0_filestream);
             return -1;
         }
-        usleep(300000);
+        usleep(50000);
         rx_length = read(uart0_filestream, &vari, 4);
         if(valLeitura(rx_length)){
-            char s;
-            s = (option==1)?'I':'R';
+            //char s;
+            //s = (option==1)?'I':'R';
             //printf("temp%c = %f\n",s,vari);
         }
         else{
