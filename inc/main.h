@@ -11,8 +11,9 @@
 #include <unistd.h>
 #include <math.h>
 
-void* uart ();
-void * i2c();
+void * uart ();
+void * arquivo();
+void * i2c_TE();
 void * lcd(void * parameters);
 void int_trata_alarme(int sig);
 void trata_interrupcao(int sinal);

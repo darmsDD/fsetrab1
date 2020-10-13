@@ -1,7 +1,7 @@
 #include "main.h"
 
 
-float tempR=-10.0,tempI=-10.0,tempE=-10.0;
+float tempR=28,tempI=30.12,tempE=-10.0;
 int contador = 0,escreve=1 , contador2=0;
 volatile int esperaEsc = 0;
 int hot=-2;
@@ -33,26 +33,20 @@ int main(){
 void* uart () {
     int i=0;
     // get internal temperature
-    do{
-        tempI = initUart(1);
-        printf("%f\n",tempI);
-        i++;
-    }while(tempI<0 && i<1);
-    if(tempI<0){tempI=30.12;}
-     // get referencial temperature
-    i=0;
-    do{
-        tempR = initUart(2);
-        printf("%f\n",tempR);
-        i++;
-    }while(tempR<0 && i<1);
-    if(tempR<0){tempR=40.12;}
+    int tp = initUart(1);
+    printf("%f\n",tempI);
+    i++;
+    if(tp>0){tempI=tp;}
+
+    // get referencial temperature
+    tp = initUart(2);
+    if(tp>0){tempR=tp;}
     return NULL;
 }
 
-void * i2c(){
+void * i2c_TE(){
     //get external temperature
-    tempE = i2c_main();
+    tempE = TE();
     return NULL;
 }
 void * lcd(void * parameters){
@@ -89,7 +83,7 @@ void int_trata_alarme(int sig){
     pthread_t thread1_id;
     pthread_t thread2_id;
     pthread_create (&thread1_id, NULL, &uart, NULL);
-    pthread_create (&thread2_id, NULL, &i2c, NULL);
+    pthread_create (&thread2_id, NULL, &i2c_TE, NULL);
     pthread_join (thread1_id, NULL);
     pthread_join (thread2_id, NULL);
     //printf("tempI = %f tempR = %f tempE = %f\n",tempI,tempR,tempE);
@@ -103,7 +97,10 @@ void int_trata_alarme(int sig){
         pthread_t thread4_id;
         pthread_create(&thread4_id,NULL,&arquivo,NULL);
     }
-    
+    while(tempR<tempE){
+        printf("Por favor usuário selecione outra temperatura\n");
+        scanf("%f",&tempR);
+    }
     if(tempI<tempR){
         hot=0;
         gpio(hot);

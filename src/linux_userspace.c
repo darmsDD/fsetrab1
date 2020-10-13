@@ -41,7 +41,7 @@ int8_t stream_sensor_data_forced_mode(struct bme280_dev *dev);
 
 void saveDataCsv(struct bme280_data *comp_data);
 
-int i2c_main()
+int TE()
 {
     struct bme280_dev dev;
 
