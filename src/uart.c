@@ -5,7 +5,8 @@ float initUart(int option){
     uart0_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);    //Open in non blocking read/write mode
     if (uart0_filestream == -1)
     {
-        printf("Erro - Não foi possível iniciar a UART.\n");
+        //printf("Erro - Não foi possível iniciar a UART.\n");
+        return -1;
     }
     else
     {

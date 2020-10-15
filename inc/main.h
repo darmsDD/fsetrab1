@@ -14,6 +14,8 @@
 void * uart ();
 void * arquivo();
 void * i2c_TE();
+void * printTemp();
+void * entradaUser();
 void * lcd(void * parameters);
 void int_trata_alarme(int sig);
 void trata_interrupcao(int sinal);

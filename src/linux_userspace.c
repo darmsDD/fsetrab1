@@ -52,7 +52,7 @@ int TE()
     char * i2cDisp = "/dev/i2c-1"; 
     if ((id.fd = open(i2cDisp, O_RDWR)) < 0)
     {
-        fprintf(stderr, "Failed to open the i2c bus %s\n", i2cDisp);
+        //fprintf(stderr, "Failed to open the i2c bus %s\n", i2cDisp);
         return -1;
     }
 
@@ -69,7 +69,7 @@ int TE()
 
     if (ioctl(id.fd, I2C_SLAVE, id.dev_addr) < 0)
     {
-        fprintf(stderr, "Failed to acquire bus access and/or talk to slave.\n");
+        //fprintf(stderr, "Failed to acquire bus access and/or talk to slave.\n");
         return -1;
     }
 
@@ -79,14 +79,14 @@ int TE()
     rslt = bme280_init(&dev);
     if (rslt != BME280_OK)
     {
-        fprintf(stderr, "Failed to initialize the device (code %+d).\n", rslt);
+        //fprintf(stderr, "Failed to initialize the device (code %+d).\n", rslt);
         return -1;
     }
 
     rslt = stream_sensor_data_forced_mode(&dev);
     if (rslt == -1)
     {
-        fprintf(stderr, "Failed to stream sensor data (code %+d).\n", rslt);
+        //fprintf(stderr, "Failed to stream sensor data (code %+d).\n", rslt);
         return -1;
     }
 
@@ -192,7 +192,7 @@ float stream_sensor_data_forced_mode(struct bme280_dev *dev)
     rslt = bme280_set_sensor_settings(settings_sel, dev);
     if (rslt != BME280_OK)
     {
-        fprintf(stderr, "Failed to set sensor settings (code %+d).", rslt);
+        //fprintf(stderr, "Failed to set sensor settings (code %+d).", rslt);
 
         return rslt;
     }
@@ -209,7 +209,7 @@ float stream_sensor_data_forced_mode(struct bme280_dev *dev)
     rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, dev);
     if (rslt != BME280_OK)
     {
-        fprintf(stderr, "Failed to set sensor mode (code %+d).", rslt);
+        //fprintf(stderr, "Failed to set sensor mode (code %+d).", rslt);
         return -1;
     }
 
@@ -218,7 +218,7 @@ float stream_sensor_data_forced_mode(struct bme280_dev *dev)
     rslt = bme280_get_sensor_data(BME280_ALL, &save_Data, dev);
     if (rslt != BME280_OK)
     {
-        fprintf(stderr, "Failed to get sensor data (code %+d).", rslt);
+        //fprintf(stderr, "Failed to get sensor data (code %+d).", rslt);
         return -1;
     }
     
