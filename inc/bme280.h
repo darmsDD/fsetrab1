@@ -9,7 +9,7 @@ extern "C" {
 /* Header includes */
 #include "bme280_defs.h"
 
-int TE();
+float TE();
 
 int8_t bme280_init(struct bme280_dev *dev);
 

@@ -19,6 +19,7 @@ void * entradaUser();
 void * lcd(void * parameters);
 void int_trata_alarme(int sig);
 void trata_interrupcao(int sinal);
+void initNcurs();
 
 
 #endif

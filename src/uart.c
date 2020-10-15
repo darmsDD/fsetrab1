@@ -51,7 +51,7 @@ float initUart(int option){
             close(uart0_filestream);
             return -1;
         }
-        usleep(50000);
+        usleep(70000);
         rx_length = read(uart0_filestream, &vari, 4);
         if(valLeitura(rx_length)){
             //char s;

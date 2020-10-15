@@ -39,9 +39,7 @@ int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *data, uint32_t len, void 
 
 float stream_sensor_data_forced_mode(struct bme280_dev *dev);
 
-void saveDataCsv(struct bme280_data *comp_data);
-
-int TE()
+float TE()
 {
     struct bme280_dev dev;
 
@@ -83,14 +81,14 @@ int TE()
         return -1;
     }
 
-    rslt = stream_sensor_data_forced_mode(&dev);
-    if (rslt == -1)
+    float resultado = stream_sensor_data_forced_mode(&dev);
+    if (resultado < 0)
     {
         //fprintf(stderr, "Failed to stream sensor data (code %+d).\n", rslt);
         return -1;
     }
 
-    return rslt;
+    return resultado;
 }
 
 /*!
@@ -214,7 +212,7 @@ float stream_sensor_data_forced_mode(struct bme280_dev *dev)
     }
 
     /* Wait for the measurement to complete and print data */
-    usleep(50000);
+    usleep(70000);
     rslt = bme280_get_sensor_data(BME280_ALL, &save_Data, dev);
     if (rslt != BME280_OK)
     {
