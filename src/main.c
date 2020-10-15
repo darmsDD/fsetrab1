@@ -1,8 +1,6 @@
 #include "main.h"
 #include <bcm2835.h>
-#include <ncurses.h>
-#include <curses.h>
-#include <errno.h>
+
 
 
 float tempR=60.0,tempI=30.12,tempE=-10.0,histerese=4.0;
@@ -43,7 +41,7 @@ int main(){
     
     
     pthread_create (&thread5_id, NULL, &entradaUser, NULL);
-    ualarm(5000,500000);
+    ualarm(500000,500000);
     while(1){
         sleep(2);
     }
@@ -220,7 +218,6 @@ void int_trata_alarme(int sig){
     if(semf6){
         int error;
         if(error = pthread_create (&thread6_id, NULL, &printTemp, NULL),error!=0){
-            fprintf(stderr,"Foi criado threads demais");
             kill(getpid(),SIGINT);
         }
     }
@@ -265,7 +262,7 @@ void int_trata_alarme(int sig){
     
     
 void trata_interrupcao(int sinal){
-    printf("\nentrei na interrupção\n");
+    ualarm(0,0);
     pthread_join (thread1_id, NULL);
     pthread_join (thread2_id, NULL);
     pthread_join(thread3_id,NULL);

@@ -10,6 +10,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <math.h>
+#include <ncurses.h>
+#include <curses.h>
+#include <errno.h>
 
 void * uart ();
 void * arquivo();
